@@ -1,0 +1,36 @@
+@model Phong
+@{
+    ViewData["Title"] = "Chi tiết phòng";
+    var giaPhong = Model.GiaPhong ?? (Model.MaLoaiPhongNavigation != null ? Model.MaLoaiPhongNavigation.GiaPhong : 250000);
+    var hinhAnh = !string.IsNullOrWhiteSpace(Model.HinhAnh) ? "/pictures/" + Model.HinhAnh : "/pictures/hotel1.jpg";
+}
+
+<div class="container py-4">
+    <p><a asp-controller="Room" asp-action="Index">← Quay lại danh sách phòng</a></p>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <img src="@hinhAnh" alt="@Model.TenPhong" class="img-fluid rounded room-detail-image" />
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.TenPhong</h2>
+            <p>Loại phòng: @(Model.MaLoaiPhongNavigation?.TenLoaiPhong ?? "Phòng khách sạn")</p>
+            <p>Số người: @(Model.SoNguoi ?? 2)</p>
+            <p>Diện tích: @(Model.DienTich ?? 25) m²</p>
+            <p>@(Model.MoTaPhong ?? "Phòng nghỉ sạch sẽ, phù hợp cho khách lưu trú.")</p>
+            <h4 class="text-danger">@String.Format("{0:N0} đ", giaPhong) / đêm</h4>
+
+            <hr />
+            <h5>Thông tin đặt phòng</h5>
+            <div class="mb-3">
+                <label for="ngayNhan" class="form-label">Ngày nhận phòng</label>
+                <input id="ngayNhan" type="date" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label for="ngayTra" class="form-label">Ngày trả phòng</label>
+                <input id="ngayTra" type="date" class="form-control" />
+            </div>
+            <a asp-controller="Booking" asp-action="Index" asp-route-id="@Model.MaPhong" class="btn btn-warning">Đặt phòng</a>
+        </div>
+    </div>
+</div>

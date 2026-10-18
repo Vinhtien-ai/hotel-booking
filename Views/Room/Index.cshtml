@@ -1,0 +1,63 @@
+@model HotelManagement.Controllers.LoaiPhongPhongTrangThaiPhong
+@{
+    ViewData["Title"] = "Danh sách phòng";
+}
+
+<div class="container py-4">
+    <h2 class="mb-3">Danh sách phòng khách sạn</h2>
+
+    <form method="get" asp-controller="Room" asp-action="Index" class="border rounded p-3 mb-4 bg-white">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label" for="ngayden">Ngày nhận phòng</label>
+                <input id="ngayden" type="date" name="ngayden" class="form-control" value="@(Model.NgayDen?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="ngaydi">Ngày trả phòng</label>
+                <input id="ngaydi" type="date" name="ngaydi" class="form-control" value="@(Model.NgayDi?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="loaiphong">Loại phòng</label>
+                <select id="loaiphong" name="loaiphong" class="form-select">
+                    <option value="">Tất cả loại phòng</option>
+                    @foreach (var loai in Model.loaiphongs)
+                    {
+                        <option value="@loai.MaLoaiPhong" selected="@(Model.selectedLoaiPhong == loai.MaLoaiPhong)">@loai.TenLoaiPhong</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-warning">Tìm phòng</button>
+                <a asp-controller="Room" asp-action="Index" class="btn btn-outline-secondary">Xóa lựa chọn</a>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.phongs == null || !Model.phongs.Any())
+    {
+        <p>Hiện chưa có phòng phù hợp.</p>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var phong in Model.phongs)
+            {
+                var hinhAnh = !string.IsNullOrWhiteSpace(phong.HinhAnh) ? "/pictures/" + phong.HinhAnh : "/pictures/hotel1.jpg";
+                var giaPhong = phong.GiaPhong ?? (phong.MaLoaiPhongNavigation != null ? phong.MaLoaiPhongNavigation.GiaPhong : 250000);
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="@hinhAnh" class="card-img-top room-card-image" alt="@phong.TenPhong" />
+                        <div class="card-body">
+                            <h5 class="card-title">@phong.TenPhong</h5>
+                            <p class="mb-1">Loại phòng: @(phong.MaLoaiPhongNavigation?.TenLoaiPhong ?? "Phòng khách sạn")</p>
+                            <p class="mb-2">Sức chứa: @(phong.SoNguoi ?? 2) người</p>
+                            <p class="text-danger fw-bold">@String.Format("{0:N0} đ", giaPhong) / đêm</p>
+                            <a asp-controller="Room" asp-action="Details" asp-route-id="@phong.MaPhong" class="btn btn-outline-secondary btn-sm">Chi tiết</a>
+                            <a asp-controller="Booking" asp-action="Index" asp-route-id="@phong.MaPhong" class="btn btn-warning btn-sm">Đặt phòng</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

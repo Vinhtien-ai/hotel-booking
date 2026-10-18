@@ -1,0 +1,26 @@
+@model HotelManagement.Models.Phong
+@{
+    ViewData["Title"] = "Đặt phòng";
+    var giaPhong = Model.GiaPhong ?? 350000;
+    var hinhAnh = !string.IsNullOrWhiteSpace(Model.HinhAnh) ? "/pictures/" + Model.HinhAnh : "/pictures/hotel1.jpg";
+}
+<div class="container py-5">
+    <h2 class="mb-4">Đặt phòng</h2>
+    <div class="card booking-card mx-auto">
+        <div class="row g-0">
+            <div class="col-md-5">
+                <img src="@hinhAnh" alt="@Model.TenPhong" class="img-fluid h-100 booking-image" />
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h4>@Model.TenPhong</h4>
+                    <p>Loại phòng: @Model.MaLoaiPhongNavigation?.TenLoaiPhong</p>
+                    <p>Sức chứa: @(Model.SoNguoi ?? 2) người</p>
+                    <h5 class="text-danger">@String.Format("{0:N0} đ", giaPhong) / đêm</h5>
+                    <p class="text-muted">Đây là trang minh họa giao diện. Thông tin đặt phòng chưa được lưu.</p>
+                    <a asp-controller="Room" asp-action="Index" class="btn btn-warning">Quay lại danh sách phòng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

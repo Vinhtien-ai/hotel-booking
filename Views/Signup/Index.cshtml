@@ -1,0 +1,30 @@
+@model HotelManagement.Controllers.PersonAndAccount
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+<div class="container py-5">
+    <div class="card auth-card p-4 mx-auto">
+        <h2 class="text-center mb-4">Đăng ký</h2>
+        @if (ViewBag.Message != null) { <div class="alert alert-info">@ViewBag.Message</div> }
+        <form asp-controller="Signup" asp-action="Index" method="post">
+            <div class="mb-3">
+                <label class="form-label" for="hoten">Họ và tên</label>
+                <input id="hoten" name="p.HoTen" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="username">Tên đăng nhập</label>
+                <input id="username" name="a.UserName" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Mật khẩu</label>
+                <input id="password" name="a.Password" type="password" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="confirm">Nhập lại mật khẩu</label>
+                <input id="confirm" name="confirm" type="password" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+        </form>
+        <p class="text-center mt-3 mb-0">Đã có tài khoản? <a asp-controller="Login" asp-action="Index">Đăng nhập</a></p>
+    </div>
+</div>

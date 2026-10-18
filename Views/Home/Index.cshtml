@@ -1,0 +1,269 @@
+@model HotelManagement.Controllers.HomeViewModel
+@{
+    ViewData["Title"] = "Trang chủ - Đặt phòng Khách sạn & Homestay";
+}
+
+
+<div class="home-hero position-relative text-white py-5 mb-5">
+    <div class="container py-4 text-center">
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold mb-3 fs-6">
+            <i class="bi bi-stars me-1"></i> Chào mừng đến với Paradise Hotel & Homestay
+        </span>
+        <h1 class="display-4 fw-bold mb-3">Kỳ Nghỉ Trong Mơ, Trải Nghiệm Đẳng Cấp</h1>
+        <p class="lead text-light opacity-90 mx-auto mb-5" class="hero-description">
+            Hệ thống phòng nghỉ và homestay sang trọng, view biển và sân vườn thoáng đãng. Đặt phòng trực tuyến nhanh chóng với ưu đãi tốt nhất.
+        </p>
+
+      
+        <div class="card search-panel shadow-lg border-0 text-dark mx-auto text-start p-4">
+            <div class="card-body p-2">
+                <h5 class="fw-bold text-dark mb-3">
+                    <i class="bi bi-search text-warning me-2"></i>Tìm kiếm phòng & homestay còn trống
+                </h5>
+                <form method="get" asp-controller="Room" asp-action="Index">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label fw-semibold small text-muted"><i class="bi bi-calendar-event me-1 text-primary"></i>Ngày nhận phòng</label>
+                            <input type="date" class="form-control form-control-lg fs-6" name="ngayden" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label fw-semibold small text-muted"><i class="bi bi-calendar-check me-1 text-primary"></i>Ngày trả phòng</label>
+                            <input type="date" class="form-control form-control-lg fs-6" name="ngaydi" value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" required />
+                        </div>
+
+                        <div class="col-lg-2 col-md-6">
+                            <label class="form-label fw-semibold small text-muted"><i class="bi bi-people me-1 text-primary"></i>Số lượng khách</label>
+                            <select class="form-select form-select-lg fs-6" name="sokhach">
+                                <option value="">Tất cả</option>
+                                <option value="1">1 Người</option>
+                                <option value="2">2 Người</option>
+                                <option value="3">3 Người</option>
+                                <option value="4">4 Người</option>
+                                <option value="6">6+ Người (Nhóm/Gia đình)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-6">
+                            <label class="form-label fw-semibold small text-muted"><i class="bi bi-house-door me-1 text-primary"></i>Loại phòng</label>
+                            <select class="form-select form-select-lg fs-6" name="loaiphong">
+                                <option value="">Tất cả loại phòng</option>
+                                @if (Model.LoaiPhongs != null)
+                                {
+                                    @foreach (var lp in Model.LoaiPhongs)
+                                    {
+                                        <option value="@lp.MaLoaiPhong">@lp.TenLoaiPhong</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-12">
+                            <button type="submit" class="btn btn-warning btn-lg w-100 fw-bold shadow-sm">
+                                <i class="bi bi-search me-1"></i> Tìm phòng
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+  
+    <div class="text-center mb-5">
+        <h6 class="text-warning text-uppercase fw-bold letter-spacing-1">Danh Mục Đa Dạng</h6>
+        <h2 class="fw-bold">Khám Phá Các Loại Phòng & Homestay</h2>
+        <p class="text-muted">Lựa chọn không gian phù hợp nhất cho chuyến đi của bạn</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        @if (Model.LoaiPhongs != null)
+        {
+            @foreach (var lp in Model.LoaiPhongs)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm p-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill">
+                                    <i class="bi bi-tag-fill me-1"></i> @lp.MaLoaiPhong
+                                </span>
+                                <span class="text-danger fw-bold fs-5">
+                                    @String.Format("{0:N0} đ", lp.GiaPhong)<small class="text-muted fs-6 fw-normal">/đêm</small>
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold">@lp.TenLoaiPhong</h5>
+                            <p class="card-text text-muted small">Phòng tiêu chuẩn khách sạn & homestay đầy đủ tiện nghi hiện đại, không gian riêng tư, view đẹp.</p>
+                            <a asp-controller="Room" asp-action="Index" asp-route-loaiphong="@lp.MaLoaiPhong" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold">
+                                Xem danh sách phòng <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+            <h6 class="text-warning text-uppercase fw-bold">Phòng & Homestay Nổi Bật</h6>
+            <h2 class="fw-bold mb-0">Các Lựa Chọn Được Yêu Thích Nhất</h2>
+        </div>
+        <a asp-controller="Room" asp-action="Index" class="btn btn-outline-dark fw-semibold">
+            Xem tất cả phòng <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="row g-4 mb-5">
+        @if (Model.FeaturedPhongs != null)
+        {
+            @foreach (var phong in Model.FeaturedPhongs)
+            {
+                string imgPath = !string.IsNullOrEmpty(phong.HinhAnh) ? $"/pictures/{phong.HinhAnh}" :
+                                 (phong.MaLoaiPhong == "MLP1" ? "/pictures/phongdon.png" :
+                                 (phong.MaLoaiPhong == "MLP2" ? "/pictures/phongdoi.png" :
+                                 (phong.MaLoaiPhong == "MLP3" ? "/pictures/phonggiadinh.jpg" : "/pictures/phongvip.jpg")));
+
+                float price = phong.GiaPhong ?? (phong.MaLoaiPhongNavigation != null ? phong.MaLoaiPhongNavigation.GiaPhong : 250000);
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="position-relative">
+                            <img src="@imgPath" class="card-img-top room-card-image" alt="@phong.TenPhong" onerror="this.src='/pictures/hotel1.jpg'" />
+                            <span class="position-absolute top-0 end-0 m-2 badge @(phong.MaTrangThai == "MTT1" ? "bg-success" : (phong.MaTrangThai == "MTT2" ? "bg-danger" : "bg-warning text-dark")) badge-room-status">
+                                @(phong.MaTrangThaiNavigation?.TenTrangThai ?? "Trống")
+                            </span>
+                            <span class="position-absolute bottom-0 start-0 m-2 badge bg-dark bg-opacity-75 text-white">
+                                <i class="bi bi-bookmark-fill me-1"></i>@(phong.MaLoaiPhongNavigation?.TenLoaiPhong ?? "Loại phòng")
+                            </span>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-bold text-dark mb-2">@phong.TenPhong</h5>
+                            
+                            <div class="d-flex gap-3 text-muted small mb-3">
+                                <span><i class="bi bi-people-fill text-primary me-1"></i>@(phong.SoNguoi ?? 2) khách</span>
+                                <span><i class="bi bi-arrows-fullscreen text-primary me-1"></i>@(phong.DienTich ?? 25) m²</span>
+                                <span><i class="bi bi-wifi text-primary me-1"></i>Wifi Free</span>
+                            </div>
+
+                            <p class="card-text text-secondary small flex-grow-1 text-truncate-2">
+                                @(phong.MoTaPhong ?? "Phòng nghỉ hiện đại, thiết kế tinh tế với đầy đủ tiện ích đáp ứng mọi nhu cầu nghỉ dưỡng.")
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(phong.TienIch))
+                            {
+                                <div class="mb-3 text-muted small text-truncate">
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i>@phong.TienIch
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-auto">
+                                <div>
+                                    <span class="text-danger fw-bold fs-5">@String.Format("{0:N0} đ", price)</span>
+                                    <small class="text-muted">/đêm</small>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Room" asp-action="Details" asp-route-id="@phong.MaPhong" class="btn btn-outline-secondary btn-sm">
+                                        Chi tiết
+                                    </a>
+                                    <a asp-controller="Room" asp-action="Details" asp-route-id="@phong.MaPhong" class="btn btn-warning btn-sm fw-bold">
+                                        Đặt ngay
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+
+    <div id="services" class="bg-white rounded-4 shadow-sm p-5 my-5">
+        <div class="text-center mb-5">
+            <h6 class="text-warning text-uppercase fw-bold">Tiện Nghi Đẳng Cấp</h6>
+            <h2 class="fw-bold">Dịch Vụ & Tiện Ích Độc Quyền</h2>
+            <p class="text-muted">Mang đến cho bạn kỳ nghỉ hoàn hảo với đầy đủ các dịch vụ chăm sóc chu đáo</p>
+        </div>
+
+        <div class="row g-4 text-center">
+            <div class="col-lg-3 col-md-6">
+                <div class="p-3">
+                    <div class="rounded-circle bg-warning-subtle text-warning d-inline-flex align-items-center justify-content-center mb-3" class="feature-icon rounded-circle bg-warning-subtle text-warning d-inline-flex align-items-center justify-content-center mb-3">
+                        <i class="bi bi-egg-fried fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold">Buffet Ăn Sáng</h5>
+                    <p class="text-muted small">Thực đơn phong phú Á - Âu với nguyên liệu tươi ngon được chế biến bởi đầu bếp chuyên nghiệp.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-3">
+                    <div class="rounded-circle bg-info-subtle text-info d-inline-flex align-items-center justify-content-center mb-3" class="feature-icon rounded-circle bg-info-subtle text-info d-inline-flex align-items-center justify-content-center mb-3">
+                        <i class="bi bi-car-front-fill fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold">Đưa Đón Sân Bay</h5>
+                    <p class="text-muted small">Xe đời mới đưa đón an toàn, đúng giờ từ sân bay hoặc nhà ga trực tiếp về khách sạn/homestay.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-3">
+                    <div class="rounded-circle bg-success-subtle text-success d-inline-flex align-items-center justify-content-center mb-3" class="feature-icon rounded-circle bg-success-subtle text-success d-inline-flex align-items-center justify-content-center mb-3">
+                        <i class="bi bi-fire fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold">BBQ Homestay Ngoài Trời</h5>
+                    <p class="text-muted small">Khu vực sân vườn thoáng đãng với bếp nướng BBQ và set thịt nướng tươi sống cho các buổi tiệc đầm ấm.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-3">
+                    <div class="rounded-circle bg-danger-subtle text-danger d-inline-flex align-items-center justify-content-center mb-3" class="feature-icon rounded-circle bg-danger-subtle text-danger d-inline-flex align-items-center justify-content-center mb-3">
+                        <i class="bi bi-water fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold">Hồ Bơi Vô Cực</h5>
+                    <p class="text-muted small">Hồ bơi ngoài trời làn nước trong xanh, view ngắm hoàng hôn tuyệt đẹp và ghế tắm nắng thư giãn.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row align-items-center g-5 my-5">
+        <div class="col-lg-6">
+            <img src="/pictures/hotel2.jpg" class="img-fluid rounded-4 shadow" alt="Paradise Hotel" onerror="this.src='/pictures/hotel1.jpg'" />
+        </div>
+        <div class="col-lg-6">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold mb-2">Vì sao chọn chúng tôi</span>
+            <h2 class="fw-bold mb-4">Trải Nghiệm Nghỉ Dưỡng Khác Biệt Tại Paradise</h2>
+            <div class="d-flex mb-3 gap-3">
+                <div class="text-warning fs-3"><i class="bi bi-geo-alt-fill"></i></div>
+                <div>
+                    <h5 class="fw-bold mb-1">Vị Trí Đắc Địa</h5>
+                    <p class="text-muted small">Nằm ngay cạnh bãi biển và các điểm du lịch nổi tiếng, thuận tiện di chuyển và khám phá ẩm thực địa phương.</p>
+                </div>
+            </div>
+            <div class="d-flex mb-3 gap-3">
+                <div class="text-warning fs-3"><i class="bi bi-shield-check"></i></div>
+                <div>
+                    <h5 class="fw-bold mb-1">Giá Tốt & Không Phí Ẩn</h5>
+                    <p class="text-muted small">Cam kết giá phòng tốt nhất, minh bạch thông tin và nhiều chương trình ưu đãi dành cho khách hàng đặt trước.</p>
+                </div>
+            </div>
+            <div class="d-flex mb-3 gap-3">
+                <div class="text-warning fs-3"><i class="bi bi-headset"></i></div>
+                <div>
+                    <h5 class="fw-bold mb-1">Hỗ Trợ 24/7 Tận Tâm</h5>
+                    <p class="text-muted small">Đội ngũ nhân viên và lễ tân nhiệt tình sẵn sàng hỗ trợ bạn bất kỳ lúc nào để kỳ nghỉ diễn ra trọn vẹn.</p>
+                </div>
+            </div>
+            <a asp-controller="Room" asp-action="Index" class="btn btn-warning btn-lg fw-bold px-4 mt-2">
+                Đặt phòng ngay <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</div>
